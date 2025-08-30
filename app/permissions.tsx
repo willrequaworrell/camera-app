@@ -27,7 +27,7 @@ const PermissionsScreen = () => {
   return (
     <>
       <Stack.Screen options={{headerShown: false}}/>
-      <SafeAreaView className="flex-1 p-8 bg-slate-900">
+      <SafeAreaView className="flex-1 bg-slate-900">
         <View className="flex flex-col items-center flex-1 p-16">
           <Image className='h-24 w-full' source={require("@/assets/images/logo2.png")}/>
           <View className="flex justify-center h-3/4 gap-y-8">
