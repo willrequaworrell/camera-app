@@ -6,15 +6,18 @@ import { Camera, CameraPermissionStatus } from "react-native-vision-camera";
 
 const PermissionsScreen = () => {
   const [cameraPermissionStatus, setCameraPermisstionStatus] = useState<CameraPermissionStatus>("not-determined")
+  const permissionGranted = cameraPermissionStatus === "granted"
   const router = useRouter()
 
   const requestCameraPermissions = async () => {
+    
     const permission = await Camera.requestCameraPermission()
+    console.log(permission)
     setCameraPermisstionStatus(permission)
   }
 
   const handleContinue = () => {
-    if (cameraPermissionStatus !== "granted") {
+    if (!permissionGranted) {
       Alert.alert("This app requires camera access. Please go to settings to enable access.")
       return
     } 
@@ -26,7 +29,6 @@ const PermissionsScreen = () => {
       <Stack.Screen options={{headerShown: false}}/>
       <SafeAreaView className="flex-1 p-8 bg-slate-900">
         <View className="flex flex-col items-center flex-1 p-16">
-          {/* <Text className="text-white text-6xl">Identif.ai</Text> */}
           <Image className='h-24 w-full' source={require("@/assets/images/logo2.png")}/>
           <View className="flex justify-center h-3/4 gap-y-8">
             <View className='flex-row items-center'>
@@ -36,7 +38,7 @@ const PermissionsScreen = () => {
               </View>
               <Switch 
                 trackColor={{true: "#7E22CD"}}
-                value={cameraPermissionStatus === "granted"}
+                value={permissionGranted}
                 onChange={requestCameraPermissions}
               />
 
@@ -44,10 +46,10 @@ const PermissionsScreen = () => {
             <Text className="text-white">This app requires access to your camera to work properly. Please select allow when prompted.</Text>
 
           </View>
-          <View className='h-1/4 w-full '>
-            <TouchableOpacity onPress={handleContinue}>
-              <View className='flex-row items-center justify-center py-4 bg-accent rounded-lg'>
-                  <Text className='text-white'>Continue</Text>
+          <View className='h-1/4 w-full'>
+            <TouchableOpacity onPress={handleContinue} disabled={!permissionGranted}>
+              <View className={`flex-row items-center justify-center py-4  ${permissionGranted ? "bg-accent" : "bg-slate-500"} rounded-lg`}>
+                  <Text className={`${permissionGranted ? "text-white" : "text-slate-700"}`}>Continue</Text>
               </View>
             </TouchableOpacity>
 
