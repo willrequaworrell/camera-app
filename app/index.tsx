@@ -1,5 +1,5 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Redirect } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import React, { useRef, useState } from 'react';
 import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Camera, TakePhotoOptions, useCameraDevice, useCameraPermission } from 'react-native-vision-camera';
@@ -13,6 +13,7 @@ const HomeScreen = () => {
   })
   const camera = useCameraDevice('front')
   const cameraRef = useRef<Camera | null>(null)
+  const router = useRouter()
 
   const takePhoto = async () => {
 
@@ -21,6 +22,10 @@ const HomeScreen = () => {
       console.log("Taking photo")
       const photo = await cameraRef.current?.takePhoto(photoSettings)
       console.log("photo path:", photo!.path )
+      router.push({
+        pathname: "/analyze",
+        params: {media: photo?.path}
+      })
     } catch (error) {
       console.log(error)
     }
