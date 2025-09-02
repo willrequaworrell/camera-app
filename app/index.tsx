@@ -19,9 +19,7 @@ const HomeScreen = () => {
 
     try {
       if (!cameraRef) throw new Error("Failed to access camera!")
-      console.log("Taking photo")
       const photo = await cameraRef.current?.takePhoto(photoSettings)
-      console.log("photo path:", photo!.path )
       router.push({
         pathname: "/analyze",
         params: {media: photo?.path}
