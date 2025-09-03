@@ -1,21 +1,87 @@
-import { Redirect } from 'expo-router'
-import React from 'react'
-import { Text, View } from 'react-native'
-import { useCameraDevice, useCameraPermission } from 'react-native-vision-camera'
+import TakePhotoButton from '@/components/TakePhotoButton';
+import CameraControlButton from '@/components/ui/CameraControlButton';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { Redirect, useRouter } from 'expo-router';
+import React, { useRef, useState } from 'react';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Camera, CameraPosition, TakePhotoOptions, useCameraDevice, useCameraPermission } from 'react-native-vision-camera';
+
+
 
 const HomeScreen = () => {
-  const {hasPermission} = useCameraPermission()
-  if (!hasPermission) {
-    return <Redirect href={"/permissions"}/>
+  const { hasPermission } = useCameraPermission()
+  const [cameraPosition, setCameraPosition] = useState<CameraPosition>('back')
+  const [photoSettings, setPhotoSettings] = useState<TakePhotoOptions>({
+    flash: "off"
+  })
+  const [photoInProgress, setPhotoInProgress] = useState<boolean>(false)
+  const camera = useCameraDevice(cameraPosition)
+  const cameraRef = useRef<Camera | null>(null)
+  const router = useRouter()
+
+  const takePhoto = async () => {
+
+    try {
+      if (!cameraRef) throw new Error("Failed to access camera!")
+      setPhotoInProgress(true)
+      const photo = await cameraRef.current?.takePhoto(photoSettings)
+      router.push({
+        pathname: "/analyze",
+        params: {media: photo?.path}
+      })
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setPhotoInProgress(false)
+    }
+    
   }
 
-  const camera = useCameraDevice("front")
+  if (!hasPermission) {
+    return <Redirect href="/permissions" />
+  }
+
+  if (!camera) {
+    return <SafeAreaView className='flex-1 bg-slate-900'/>
+  }
+
+
   return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Text className="text-xl font-bold text-blue-500">
-        Hello World
-      </Text>
-    </View>
+    <SafeAreaView className='flex-1 bg-slate-900'>
+      <View className='p-4 h-full'>
+        <View className='relative h-[75%] rounded-2xl overflow-hidden'>
+          <Camera
+            ref={cameraRef}
+            device={camera}
+            isActive={true}
+            photo={true}   
+            enableZoomGesture                  
+            style={StyleSheet.absoluteFill}  
+          />
+        </View>
+        <View className='flex-col flex-1'>
+          <Text className='mt-6 text-white text-center font-bold text-2xl'>Snap a photo. <Text className='text-accent'>Let AI analyze it!</Text></Text>
+          <View className='flex-row justify-around items-center flex-1 px-12'>
+            <CameraControlButton 
+              icon={<Ionicons name="camera-reverse-outline" size={24} color="#7E22CD" />}
+              onPress={() => setCameraPosition(prev => (prev === "back" ? "front" : "back"))}
+            />
+            <TakePhotoButton
+              disabled={photoInProgress}
+              onPress={takePhoto}
+            />
+            <CameraControlButton 
+              type='toggle'
+              icon={<Ionicons name="flash-off-outline" size={24} color="#7E22CD" />}
+              toggledIcon={<Ionicons name="flash" size={24} color="#7E22CD" />}
+              onPress={() => setPhotoSettings(prev => ({
+                flash: prev.flash === "off" ? "on" : "off"
+              }))}
+            />
+          </View>
+        </View>
+      </View>
+    </SafeAreaView>
   )
 }
 
