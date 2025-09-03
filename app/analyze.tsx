@@ -1,12 +1,14 @@
+import NavigationButton from '@/components/ui/NavigationButton';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import * as fs from 'expo-file-system';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Image, SafeAreaView, Text, View } from 'react-native';
 
 const AnalyzeScreen = () => {
   const [analysisResult, setAnalysisResult] = useState<string>('')
   const {media} = useLocalSearchParams()
+  const router = useRouter()
 
 
   const sendToAI = async (encodedPhoto: string): Promise<string> => {
@@ -23,7 +25,7 @@ const AnalyzeScreen = () => {
           contents: [{
             role: 'user',
             parts: [
-              { text: 'Describe this image in one concise paragraph.' },
+              { text: 'Describe this image in one concise paragraph containing 30 words or fewer' },
               {
                 inlineData: {
                   mimeType: 'image/jpeg',
@@ -32,7 +34,7 @@ const AnalyzeScreen = () => {
               },
             ],
           }],
-          generationConfig: { maxOutputTokens: 400, temperature: 0.7 },
+          generationConfig: { maxOutputTokens: 200, temperature: 0.7 },
         }),
       }
     );
@@ -73,22 +75,31 @@ const AnalyzeScreen = () => {
   return (
     <SafeAreaView className='flex-1 bg-slate-900'>
       <View className='p-4 h-full'>
-        <Image 
-          source={{uri: `file://${media}`}}
-          className='w-full h-[85%] rounded-2xl overflow-hidden '
-        />
-        <View className='flex justify-center items-center h-[15%]'>
-          {analysisResult ? 
-          (
-            <View className='flex-col w-full justify-start'>
-              <Text className='text-white text-2xl'>Analysis:</Text>
-              <Text className='text-accent text-md'>{analysisResult}</Text>
-            </View>
-          ) : 
-          (
-            <MaterialCommunityIcons name="loading" size={72} color="#7E22CD" className='animate-spin' />
-          )}
+        <View className='relative h-[75%] rounded-2xl overflow-hidden'>
+          <Image
+            source={{ uri: `file://${media}` }}
+            className='w-full h-full'
+          />
         </View>
+        <View className='flex-col flex-1 mt-6'>
+          { analysisResult ?
+            (
+              <View className='flex-col w-full justify-start '>
+                <Text className='text-white text-2xl font-bold'>AI Analysis:</Text>
+                <Text className='text-accent font-bold text-md'>{analysisResult}</Text>
+              </View>
+            ) :
+            (
+              <View className='flex justify-center flex-1 items-center'> 
+                <MaterialCommunityIcons name="loading" size={96} color="#7E22CD" className='animate-spin' />
+              </View>
+            )}
+        </View>
+        <NavigationButton
+          text='Back to Camera'
+          onPress={() => router.back()}
+          disabled={!!!analysisResult}
+        />
       </View>
     </SafeAreaView>
   )
