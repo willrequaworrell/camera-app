@@ -48,7 +48,7 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView className='flex-1 bg-slate-900'>
-      <View className='p-4 h-full'>
+      <View className='h-full p-4'>
         <View className='relative h-[75%] rounded-2xl overflow-hidden'>
           <Camera
             ref={cameraRef}
@@ -60,15 +60,17 @@ const HomeScreen = () => {
           />
         </View>
         <View className='flex-col flex-1'>
-          <Text className='mt-6 text-white text-center font-bold text-2xl'>Snap a photo. <Text className='text-accent'>Let AI analyze it!</Text></Text>
-          <View className='flex-row justify-around items-center flex-1 px-12'>
+          <Text className='mt-6 text-2xl font-bold text-center text-white'>Snap a photo. <Text className='text-accent'>Let AI analyze it!</Text></Text>
+          <View className='flex-row items-center justify-around flex-1 px-12'>
             <CameraControlButton 
               icon={<Ionicons name="camera-reverse-outline" size={24} color="#7E22CD" />}
               onPress={() => setCameraPosition(prev => (prev === "back" ? "front" : "back"))}
+              accessibilityLabel={"Flip Camera"}
             />
             <TakePhotoButton
               disabled={photoInProgress}
               onPress={takePhoto}
+              accessibilityLabel="Take Photo"
             />
             <CameraControlButton 
               type='toggle'
@@ -77,6 +79,7 @@ const HomeScreen = () => {
               onPress={() => setPhotoSettings(prev => ({
                 flash: prev.flash === "off" ? "on" : "off"
               }))}
+              accessibilityLabel="Toggle Flash"
             />
           </View>
         </View>

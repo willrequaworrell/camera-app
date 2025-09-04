@@ -7,19 +7,19 @@ import { Image, SafeAreaView, Text, View } from 'react-native';
 
 const AnalyzeScreen = () => {
   const [analysisResult, setAnalysisResult] = useState<string>('')
-  const {media} = useLocalSearchParams()
+  const { media } = useLocalSearchParams()
   const router = useRouter()
 
 
   const sendToAI = async (encodedPhoto: string): Promise<string> => {
-    const apiKey = process.env.EXPO_PUBLIC_GEMINI_API_KEY; 
+    const apiKey = process.env.EXPO_PUBLIC_GEMINI_API_KEY;
     const res = await fetch(
       'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-goog-api-key': apiKey as string, 
+          'x-goog-api-key': apiKey as string,
         },
         body: JSON.stringify({
           contents: [{
@@ -29,7 +29,7 @@ const AnalyzeScreen = () => {
               {
                 inlineData: {
                   mimeType: 'image/jpeg',
-                  data: encodedPhoto 
+                  data: encodedPhoto
                 },
               },
             ],
@@ -45,16 +45,16 @@ const AnalyzeScreen = () => {
     }
 
     const json = await res.json();
-    
+
     const text =
       json?.candidates[0].content?.parts[0].text
     return text;
-   
+
   }
 
   const getPhotoAnalysis = async () => {
     try {
-      const encodedPhoto = await fs.readAsStringAsync(`file://${media}`, {encoding: 'base64'})
+      const encodedPhoto = await fs.readAsStringAsync(`file://${media}`, { encoding: 'base64' })
 
       const aiResponse = await sendToAI(encodedPhoto)
       setAnalysisResult(aiResponse)
@@ -66,32 +66,42 @@ const AnalyzeScreen = () => {
 
 
   useEffect(() => {
-    if (!media) return 
-    
+    if (!media) return
+
     getPhotoAnalysis()
 
-  } , [media])
+  }, [media])
 
   return (
     <SafeAreaView className='flex-1 bg-slate-900'>
-      <View className='p-4 h-full'>
+      <View className='h-full p-4'>
         <View className='relative h-[75%] rounded-2xl overflow-hidden'>
           <Image
             source={{ uri: `file://${media}` }}
             className='w-full h-full'
+            accessibilityRole="image"
+            accessibilityLabel="Captured photo"
           />
         </View>
         <View className='flex-col flex-1 mt-6'>
-          { analysisResult ?
+          {analysisResult ?
             (
-              <View className='flex-col w-full justify-start '>
-                <Text className='text-white text-2xl font-bold'>AI Analysis:</Text>
-                <Text className='text-accent font-bold text-md'>{analysisResult}</Text>
+              <View className='flex-col justify-start w-full '>
+                <Text className='text-2xl font-bold text-white'>AI Analysis:</Text>
+                <Text className='font-bold text-accent text-md'>{analysisResult}</Text>
               </View>
             ) :
             (
-              <View className='flex justify-center flex-1 items-center'> 
-                <MaterialCommunityIcons name="loading" size={96} color="#7E22CD" className='animate-spin' />
+              <View className='flex items-center justify-center flex-1'>
+                <MaterialCommunityIcons
+                  name="loading"
+                  size={96}
+                  color="#7E22CD"
+                  className='animate-spin'
+                  testID="loading-icon"
+                  accessibilityRole="image"
+                  accessibilityLabel="Loading analysis"
+                />
               </View>
             )}
         </View>
