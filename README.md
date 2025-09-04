@@ -1,50 +1,77 @@
-# Welcome to your Expo app 👋
+# Identifi.ai 📸🤖
+## Overview
+Identifi.ai is a React Native mobile app that captures photos and provides instant AI-generated descriptions using Google's Gemini Vision API. Point, shoot, and discover what AI sees in your world.
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Getting Started
+Prerequisites
+iOS device (physical device required - camera doesn't work in simulators)
 
-## Get started
+macOS with Xcode installed
 
-1. Install dependencies
+Node.js 18+ and npm/yarn
 
-   ```bash
-   npm install
-   ```
+Expo CLI installed globally
 
-2. Start the app
+Google AI Studio API key (free tier available)
 
-   ```bash
-   npx expo start
-   ```
+Setup Instructions
+Clone and Install Dependencies
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
 ```
+git clone https://github.com/yourusername/identifi-ai.git
+cd identifi-ai
+npm install
+Install Native Dependencies
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+```
+## Install Expo-managed packages
+npx expo install react-native-vision-camera expo-file-system expo-dev-client
 
-## Learn more
+## Install JavaScript dependencies  
+npm install react-native-dotenv
+Configure Environment Variables
+Create a .env file in the project root:
 
-To learn more about developing your project with Expo, look at the following resources:
+```
+EXPO_PUBLIC_GEMINI_API_KEY=your_gemini_api_key_here
+Get your Gemini API key from Google AI Studio.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+iOS Setup & Permissions
 
-## Join the community
+```
+## Generate native iOS project
+npx expo prebuild
 
-Join our community of developers creating universal apps.
+## Install iOS dependencies
+cd ios && pod install && cd ..
+Run the Application
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```
+## Build and run on connected iOS device
+npx expo run:ios --device
+⚠️ Important: You must use a physical iOS device - camera functionality does not work in simulators.
+
+## Testing
+Tests use React Native Testing Library and Jest:
+
+```
+npm test
+As someone new to React Native testing, I utilized AI to generate test cases and testing code, which I then adapted and tweaked for my specific use cases. The tests likely need more comprehensive coverage and enhancement in the future.
+
+## Challenges Faced
+Camera Configuration: Configuring react-native-vision-camera to work properly and suit my app's specific needs was one of the biggest challenges. It required extensive research into camera parameters, settings, and tweaking various configurations to get the desired behavior.
+
+React Native Testing: Not being deeply familiar with testing in React Native, I utilized AI to generate test cases and testing code, which I then adapted for my use cases. The testing approach needs expansion and refinement.
+
+Permission Flow Management: Handling async permission requests and ensuring the UI state correctly reflects permission status required careful state management.
+
+Platform Limitations: Limited to iOS testing due to device availability, leaving Android compatibility untested.
+
+## Future Enhancements
+Expand testing suite with better coverage
+
+Improve UI/UX and enhance accessibility
+
+Add Android support with device testing
+
+Implement photo gallery integration
