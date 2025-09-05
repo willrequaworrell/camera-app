@@ -96,7 +96,7 @@ const AnalyzeScreen = () => {
                 <MaterialCommunityIcons
                   name="loading"
                   size={96}
-                  color="#7E22CD"
+                  color="#6b1bf5"
                   className='animate-spin'
                   testID="loading-icon"
                   accessibilityRole="image"
