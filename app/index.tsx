@@ -63,7 +63,7 @@ const HomeScreen = () => {
           <Text className='mt-6 text-2xl font-bold text-center text-white'>Snap a photo. <Text className='text-accent'>Let AI analyze it!</Text></Text>
           <View className='flex-row items-center justify-around flex-1 px-12'>
             <CameraControlButton 
-              icon={<Ionicons name="camera-reverse-outline" size={24} color="#7E22CD" />}
+              icon={<Ionicons name="camera-reverse-outline" size={24} color="#6b1bf5" />}
               onPress={() => setCameraPosition(prev => (prev === "back" ? "front" : "back"))}
               accessibilityLabel={"Flip Camera"}
             />
@@ -74,8 +74,8 @@ const HomeScreen = () => {
             />
             <CameraControlButton 
               type='toggle'
-              icon={<Ionicons name="flash-off-outline" size={24} color="#7E22CD" />}
-              toggledIcon={<Ionicons name="flash" size={24} color="#7E22CD" />}
+              icon={<Ionicons name="flash-off-outline" size={24} color="#6b1bf5" />}
+              toggledIcon={<Ionicons name="flash" size={24} color="#6b1bf5" />}
               onPress={() => setPhotoSettings(prev => ({
                 flash: prev.flash === "off" ? "on" : "off"
               }))}
